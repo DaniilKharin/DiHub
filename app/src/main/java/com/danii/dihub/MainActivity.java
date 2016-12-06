@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
             resTypeSpinner.setAdapter(spinerAdapter);
             editTextName = (EditText) findViewById(R.id.editTextName);
             Button openButton = (Button) findViewById(R.id.buttonOpen);
-
             openButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
