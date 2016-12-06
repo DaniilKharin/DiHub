@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">DiHub</string>
+    <string name="editText">Имя</string>
+    <string name="btnOpenText">ОТКРЫТЬ</string>
+    <string name="updated">Обновлено: </string>
+    <string name="created">Создано: </string>
+    <string name="Star">★ </string>
+    <string name="sort_fullname">По полному имени</string>
+    <string name="sort_create_at">По дате создания</string>
+
+    <string-array name="resTypes">
+        <item>все</item>
+        <item>пользователь владелец</item>
+        <item>пользователь участник</item>
+    </string-array>
+</resources>
