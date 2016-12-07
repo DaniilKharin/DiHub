@@ -6,13 +6,11 @@ package com.danii.dihub;
 
 public interface IReposPresenter {
     //Вызывается из View при создании
-    //в реализации будет вызывать из Model getCashedReposList
-    //если та возвратит null то вызовет getReposList
+    //в реализации будет вызывать из Model getReposList
     //если и он будет null
     //вызвать из View showError
     //иначе
     //вызвать showList из того-же View
-
     void onCreate(String username,String repotype);
     //Вызывается из View при выборе в меню другой сортировки в остальном аналогичен onCreate
     void onSort();

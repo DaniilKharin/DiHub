@@ -9,11 +9,11 @@ import java.util.List;
  */
 
 public interface IReposModel {
-    //Загрузка Списка репозиториев из интернета
-    List<GithubRepo> getReposList(String username,String repotype);
     //Загрузка Списка репозиториев из кеша(SQLite DB)
-    //если кеша с такими параметрами нет то возвращает NULL
-    List<GithubRepo> getCashedReposList(String username, String repotype);
+    //или из интернета
+    //если ни кеша с такими параметрами ни репозитория в интернете нет то возвращает NULL
+    List<GithubRepo> getReposList(String username,String repotype,String sort);
+
     //возвращает url репозитория с id
     String getRepoURL(int id);
 }

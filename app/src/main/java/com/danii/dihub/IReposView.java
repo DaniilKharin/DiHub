@@ -1,5 +1,7 @@
 package com.danii.dihub;
 
+import android.os.Bundle;
+
 import java.util.List;
 
 /**
@@ -7,8 +9,7 @@ import java.util.List;
  */
 
 public interface IReposView {
-    String getUsername();
-    String getRepoType();
+    Bundle getSavedIstanceState();
     //вызываетс onItemClicked из Presenter
     void getOnItemClick();
     //вызывается onItemLongClicked из Presenter
