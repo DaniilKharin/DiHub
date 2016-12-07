@@ -4,11 +4,10 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -64,7 +63,7 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (savedInstanceState==null) {
-
+            //запрос репозиториев у Presentera
             reposPresenter.onQuery(getApplicationContext());
         }
         else {
@@ -104,12 +103,23 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
         Parcelable[] a = new Parcelable[1];
-        result=((ReposAdapter)recyclerView.getAdapter()).getItems();
-        savedInstanceState.putParcelableArray("res",result.toArray(a));
+        if (recyclerView.getAdapter()!=null){
+            result = ((ReposAdapter) recyclerView.getAdapter()).getItems();
+            savedInstanceState.putParcelableArray("res", result.toArray(a));
+        }
         super.onSaveInstanceState(savedInstanceState);
     }
 
-
+    @Override
+    public void onPause(){
+        reposPresenter.isReady(false);
+        super.onPause();
+    }
+    @Override
+    public void onResume(){
+        reposPresenter.isReady(true);
+        super.onResume();
+    }
 
 
     @Override

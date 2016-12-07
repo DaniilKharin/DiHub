@@ -20,6 +20,6 @@ public interface IReposPresenter {
     String onItemClicked(int id);
     // вызывает из Model getRepoURL
     // и копирует URL в буфер обмена
-
+    void isReady(boolean ready);
 
 }

@@ -1,7 +1,5 @@
 package com.danii.dihub;
 
-import android.os.Bundle;
-
 import java.util.List;
 
 /**
@@ -18,4 +16,5 @@ public interface IReposView {
     void showList(List<GithubRepo> repoList,final String username);
     //выводит toast с ошибкой
     void showError(String errMsg);
+
 }

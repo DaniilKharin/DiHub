@@ -116,7 +116,6 @@ class DBHelper extends SQLiteOpenHelper {
     }
     public void clearOld() {
         Calendar calendar = Calendar.getInstance();
-        String selectQuery = "SELECT * FROM repos WHERE (username = ? AND type = ?) AND date > ?";
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("repos","date > ?",new String[]{String.valueOf(calendar.getTimeInMillis()-300000)});
     }

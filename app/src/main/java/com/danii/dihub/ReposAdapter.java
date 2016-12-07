@@ -1,15 +1,14 @@
 package com.danii.dihub;
 
 
- import android.content.Context;
- import android.support.v7.widget.RecyclerView;
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
- import android.view.LayoutInflater;
- import android.view.View;
- import android.view.ViewGroup;
-  import android.widget.TextView;
-
- import java.util.List;
+import java.util.List;
 
 public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> {
 
@@ -52,6 +51,11 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
  if (repos == null)
  return 0;
  return repos.size();
+ }
+ public boolean isEmpty(){
+  if (repos==null)
+   return true;
+  return false;
  }
  public final List<GithubRepo> getItems(){
   return  repos ;
