@@ -4,8 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,23 +18,19 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ReposActivity extends AppCompatActivity {
-    String username,reptypes;
+
+public class ReposActivity extends AppCompatActivity implements IReposView {
+    String username,reptypes,sort;
     List<GithubRepo> result;
     RecyclerView recyclerView;
     ReposAdapter reposAdapter;
     Context context;
 
     DBHelper dbHelper;
+    ReposPresenter reposPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,82 +42,41 @@ public class ReposActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         username=getIntent().getStringExtra("username");
         reptypes=getIntent().getStringExtra("reptypes");
+        sort="full_name";
+        if (reposPresenter==null)
+            reposPresenter = new ReposPresenter(this);
+
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        Uri address = Uri.parse(((ReposAdapter)recyclerView.getAdapter()).getItem(position).getHtmlUrl());
+                        Uri address = Uri.parse(reposPresenter.onItemClicked(position));
                         Intent openlinkIntent = new Intent(Intent.ACTION_VIEW, address);
                         startActivity(openlinkIntent);
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
                         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText("", ((ReposAdapter)recyclerView.getAdapter()).getItem(position).getHtmlUrl());
+                        ClipData clip = ClipData.newPlainText("", reposPresenter.onItemClicked(position));
                         clipboard.setPrimaryClip(clip);
                     }
                 })
         );
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         if (savedInstanceState==null) {
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
 
-            dbHelper = new DBHelper(context);
-            dbHelper.clearOld();
-            result = dbHelper.getAllShops(username, reptypes);
-            if (result != null) {
-                reposAdapter = new ReposAdapter(result, username,context);
-                recyclerView.setAdapter(reposAdapter);
-            } else
-                getCall(username, reptypes, "full_name");
+            reposPresenter.onQuery(getApplicationContext());
         }
         else {
             Parcelable[] a = savedInstanceState.getParcelableArray("res");
             result = new ArrayList<GithubRepo>();
             for (Parcelable r:a)
                 result.add((GithubRepo)r);
-            reposAdapter = new ReposAdapter(result, username,context);
-            recyclerView.setAdapter(reposAdapter);
+            showList(result,username);
         }
     }
 
-    public void getCall(final String username,final String reptypes,String sort) {
-        String BASE_URL = "https://api.github.com" ;
-        result = new ArrayList<>();
-        Retrofit client = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        GithubAPI service = client.create(GithubAPI.class);
 
-        Call<List<GithubRepo>> call = service.getUser(username,reptypes,sort);
-
-        Callback<List<GithubRepo>> callback= new Callback<List<GithubRepo>>() {
-
-            @Override
-            public void onResponse(Call<List<GithubRepo>> call, Response<List<GithubRepo>> response) {
-                if (response.body()!=null){
-                result.addAll(response.body());
-                reposAdapter = new ReposAdapter(result,username,context);
-                recyclerView.setAdapter(reposAdapter);
-                    for (GithubRepo r :result) {
-                        dbHelper.addRepo(r,username,reptypes);
-                    }
-                    }
-                else {
-                    Toast.makeText(ReposActivity.this, "Пользователя с таким именем не существует", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<GithubRepo>>call, Throwable t) {
-                Toast.makeText(ReposActivity.this, "Проблемы с подключением к сети", Toast.LENGTH_SHORT).show();
-            }};
-
-        call.enqueue(callback);
-
-
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -135,9 +89,13 @@ public class ReposActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.action_back: finish();
                 break;
-            case R.id.sort_fullname:getCall(username,reptypes,"full_name");
+            case R.id.sort_fullname:
+                sort="full_name";
+                reposPresenter.onQuery(this);
                 break;
-            case R.id.sort_create_at:getCall(username,reptypes,"created_at");
+            case R.id.sort_create_at:
+                sort="created_at";
+                reposPresenter.onQuery(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -146,10 +104,40 @@ public class ReposActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
         Parcelable[] a = new Parcelable[1];
+        result=((ReposAdapter)recyclerView.getAdapter()).getItems();
         savedInstanceState.putParcelableArray("res",result.toArray(a));
         super.onSaveInstanceState(savedInstanceState);
     }
 
+
+
+
+    @Override
+    public String getUserName() {
+        return username;
+    }
+
+    @Override
+    public String getRepoType() {
+        return reptypes;
+    }
+
+    @Override
+    public String getSort() {
+        return sort;
+    }
+
+    @Override
+    public void showList(List<GithubRepo> repoList, final String username) {
+        reposAdapter = new ReposAdapter(repoList,username,getApplicationContext());
+        recyclerView.setAdapter(reposAdapter);
+    }
+
+    @Override
+    public void showError(String errMsg) {
+        Toast.makeText(ReposActivity.this, errMsg, Toast.LENGTH_SHORT).show();
+        finish();
+    }
 }
 
 

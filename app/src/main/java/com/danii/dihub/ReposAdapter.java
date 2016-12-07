@@ -53,8 +53,8 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
  return 0;
  return repos.size();
  }
- public final GithubRepo getItem(int position){
-  return  repos.get(position) ;
+ public final List<GithubRepo> getItems(){
+  return  repos ;
  }
 
 

@@ -76,7 +76,7 @@ class DBHelper extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
-    public List<GithubRepo> getAllShops(String username,final String repotype) {
+    public List<GithubRepo> getAllRepo(String username, final String repotype) {
         List<GithubRepo> result = new ArrayList<GithubRepo>();
 
         String selectQuery = "SELECT * FROM repos WHERE username = ? AND type = ?";

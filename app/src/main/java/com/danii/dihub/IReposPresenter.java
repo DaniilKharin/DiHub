@@ -1,26 +1,25 @@
 package com.danii.dihub;
 
+import android.content.Context;
+
 /**
  * Created by danii on 06.12.2016.
  */
 
 public interface IReposPresenter {
-    //Вызывается из View при создании
+    //Вызывается из View при запросе данных
     //в реализации будет вызывать из Model getReposList
     //если и он будет null
     //вызвать из View showError
     //иначе
     //вызвать showList из того-же View
-    void onCreate(String username,String repotype);
-    //Вызывается из View при выборе в меню другой сортировки в остальном аналогичен onCreate
-    void onSort();
+    void onQuery(Context cont);
+
     // вызывает из Model getRepoURL
     // и открывает URL в браузере
-    void onItemClicked(int id);
+    String onItemClicked(int id);
     // вызывает из Model getRepoURL
     // и копирует URL в буфер обмена
-    void onItemLongClicked(int id);
-    //Стандартные методы
-    void onConfigurationChanged(IReposView view);
-    void onDestroy(boolean isChangingConfig);
+
+
 }

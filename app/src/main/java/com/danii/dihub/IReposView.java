@@ -9,14 +9,13 @@ import java.util.List;
  */
 
 public interface IReposView {
-    Bundle getSavedIstanceState();
-    //вызываетс onItemClicked из Presenter
-    void getOnItemClick();
-    //вызывается onItemLongClicked из Presenter
-    void getOnItemLongClick();
+
+    String getUserName();
+    String getRepoType();
+    String getSort();
     //Создает экземпляр ReposAdapter передавая в него reposList
     // и вызывает setAdapter у нашего RecyclerView
-    void showList(List<GithubRepo> repoList);
+    void showList(List<GithubRepo> repoList,final String username);
     //выводит toast с ошибкой
     void showError(String errMsg);
 }
