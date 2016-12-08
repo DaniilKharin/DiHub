@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by User on 07.12.2016.
  */
 
-public class ReposListModel implements IReposModel{
+public class ReposListModel implements IReposModel {
 
     private String userName, repoType, sort;
     private DBHelper dbHelper;
@@ -27,11 +27,11 @@ public class ReposListModel implements IReposModel{
 
     @Override
     public List<GithubRepo> getReposList(DBHelper dbHelper) {
-        this.dbHelper=dbHelper;
+        this.dbHelper = dbHelper;
         //удаляем старые записи из бд
         dbHelper.clearOld();
         //запрс в бд
-        result = dbHelper.getAllRepo(userName, repoType,sort);
+        result = dbHelper.getAllRepo(userName, repoType, sort);
         //если в бд нужных данных нет спросим в интернете
         if (result == null)
             getCall(userName, repoType, sort);
@@ -40,52 +40,52 @@ public class ReposListModel implements IReposModel{
     }
 
 
-    private void getCall(final String username,final String reptypes,String sort) {
-        String BASE_URL = "https://api.github.com" ;
+    private void getCall(final String username, final String reptypes, String sort) {
+        String BASE_URL = "https://api.github.com";
         Retrofit client = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         GithubAPI service = client.create(GithubAPI.class);
 
-        Call<List<GithubRepo>> call = service.getUser(username,reptypes,sort);
+        Call<List<GithubRepo>> call = service.getUser(username, reptypes, sort);
         //делаем синхронный запрос
         try {
-            Response<List<GithubRepo>> response= call.execute();
-            if (response.body()!=null){
+            Response<List<GithubRepo>> response = call.execute();
+            if (response.body() != null) {
                 result = new ArrayList<>();
                 result.addAll(response.body());
 
-                    dbHelper.addRepos(result,username,reptypes,sort);
+                dbHelper.addRepos(result, username, reptypes, sort);
 
-            }
-            else{
+            } else {
 
             }
 
         } catch (IOException e) {
             e.printStackTrace();
-        }}
+        }
+    }
 
     @Override
     public String getRepoURL(int id) {
-            //возвращаем URL репозитория
+        //возвращаем URL репозитория
         return result.get(id).getHtmlUrl();
     }
 
     @Override
     public void setUserName(String userName) {
-        this.userName=userName;
+        this.userName = userName;
     }
 
     @Override
     public void setRepoType(String repoType) {
-        this.repoType=repoType;
+        this.repoType = repoType;
     }
 
     @Override
     public void setSort(String sort) {
-        this.sort=sort;
+        this.sort = sort;
     }
 
     @Override

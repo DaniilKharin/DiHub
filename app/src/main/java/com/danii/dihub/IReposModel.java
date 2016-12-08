@@ -1,7 +1,6 @@
 package com.danii.dihub;
 
 
-
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public interface IReposModel {
 
     void setSort(String sort);
 
-    String getUserName( );
+    String getUserName();
 
     String getRepoType();
 

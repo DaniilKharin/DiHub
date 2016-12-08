@@ -11,6 +11,7 @@ public interface IReposView {
     //Создает экземпляр ReposAdapter передавая в него reposList
     // и вызывает setAdapter у нашего RecyclerView
     void showList(List<GithubRepo> repoList);
+
     //выводит toast с ошибкой
     void showError(int msgErrId);
 

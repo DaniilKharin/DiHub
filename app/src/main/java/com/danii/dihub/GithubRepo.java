@@ -96,38 +96,38 @@ public class GithubRepo implements Parcelable {
     @SerializedName("default_branch")
     @Expose
     private String defaultBranch;
-    public GithubRepo()
-    {}
-    public GithubRepo(Parcel in)
-    {
-        id=in.readInt();
-        name=in.readString();
-        fullName=in.readString();
-        _private=(Boolean.parseBoolean(in.readString()));
-        htmlUrl=in.readString();
-        description=in.readString();
-        fork=(Boolean.parseBoolean(in.readString()));
-        url=in.readString();
-        pushedAt=in.readString();
-        //homepage=in.readString();
-        size=in.readInt();
-        stargazersCount=in.readInt();
-        watchersCount=in.readInt();
-        language=in.readString();
-        hasIssues=(Boolean.parseBoolean(in.readString()));
-        hasDownloads=(Boolean.parseBoolean(in.readString()));
-        hasWiki=(Boolean.parseBoolean(in.readString()));
-        hasPages=(Boolean.parseBoolean(in.readString()));
-        forksCount=in.readInt();
-       // mirrorUrl=in.readString();
-        openIssuesCount=in.readInt();
-        forks=in.readInt();
-        openIssues=in.readInt();
-        watchers=in.readInt();
-        defaultBranch=in.readString();
-        owner=in.readParcelable(Owner.class.getClassLoader());
+
+    public GithubRepo() {
     }
 
+    public GithubRepo(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        fullName = in.readString();
+        _private = (Boolean.parseBoolean(in.readString()));
+        htmlUrl = in.readString();
+        description = in.readString();
+        fork = (Boolean.parseBoolean(in.readString()));
+        url = in.readString();
+        pushedAt = in.readString();
+        //homepage=in.readString();
+        size = in.readInt();
+        stargazersCount = in.readInt();
+        watchersCount = in.readInt();
+        language = in.readString();
+        hasIssues = (Boolean.parseBoolean(in.readString()));
+        hasDownloads = (Boolean.parseBoolean(in.readString()));
+        hasWiki = (Boolean.parseBoolean(in.readString()));
+        hasPages = (Boolean.parseBoolean(in.readString()));
+        forksCount = in.readInt();
+        // mirrorUrl=in.readString();
+        openIssuesCount = in.readInt();
+        forks = in.readInt();
+        openIssues = in.readInt();
+        watchers = in.readInt();
+        defaultBranch = in.readString();
+        owner = in.readParcelable(Owner.class.getClassLoader());
+    }
 
 
     /**
@@ -218,7 +218,7 @@ public class GithubRepo implements Parcelable {
      * @return The description
      */
     public String getDescription() {
-        if (description==null)
+        if (description == null)
             return "";
         else
             return description;
@@ -361,7 +361,7 @@ public class GithubRepo implements Parcelable {
      * @return The language
      */
     public String getLanguage() {
-        if (language==null)
+        if (language == null)
             return "";
         else
             return language;
@@ -554,15 +554,16 @@ public class GithubRepo implements Parcelable {
         dest.writeString(String.valueOf(hasWiki));
         dest.writeString(String.valueOf(hasPages));
         dest.writeInt(forksCount);
-       // dest.writeString(mirrorUrl.toString());
+        // dest.writeString(mirrorUrl.toString());
         dest.writeInt(openIssuesCount);
         dest.writeInt(forks);
         dest.writeInt(openIssues);
         dest.writeInt(watchers);
         dest.writeString(defaultBranch);
-        dest.writeParcelable(owner,flags);
+        dest.writeParcelable(owner, flags);
 
     }
+
     public static final Parcelable.Creator<GithubRepo> CREATOR
             = new Parcelable.Creator<GithubRepo>() {
 

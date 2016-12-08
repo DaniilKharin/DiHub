@@ -4,9 +4,10 @@ package com.danii.dihub;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Owner implements Parcelable {
@@ -37,160 +38,128 @@ public class Owner implements Parcelable {
     private Boolean siteAdmin;
 
     /**
-     * 
-     * @return
-     *     The login
+     * @return The login
      */
     public String getLogin() {
         return login;
     }
 
     /**
-     * 
-     * @param login
-     *     The login
+     * @param login The login
      */
     public void setLogin(String login) {
         this.login = login;
     }
 
     /**
-     * 
-     * @return
-     *     The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id
-     *     The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * 
-     * @return
-     *     The avatarUrl
+     * @return The avatarUrl
      */
     public String getAvatarUrl() {
         return avatarUrl;
     }
 
     /**
-     * 
-     * @param avatarUrl
-     *     The avatar_url
+     * @param avatarUrl The avatar_url
      */
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
 
     /**
-     * 
-     * @return
-     *     The gravatarId
+     * @return The gravatarId
      */
     public String getGravatarId() {
         return gravatarId;
     }
 
     /**
-     * 
-     * @param gravatarId
-     *     The gravatar_id
+     * @param gravatarId The gravatar_id
      */
     public void setGravatarId(String gravatarId) {
         this.gravatarId = gravatarId;
     }
 
     /**
-     * 
-     * @return
-     *     The url
+     * @return The url
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     * 
-     * @param url
-     *     The url
+     * @param url The url
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
-     * 
-     * @return
-     *     The htmlUrl
+     * @return The htmlUrl
      */
     public String getHtmlUrl() {
         return htmlUrl;
     }
 
     /**
-     * 
-     * @param htmlUrl
-     *     The html_url
+     * @param htmlUrl The html_url
      */
     public void setHtmlUrl(String htmlUrl) {
         this.htmlUrl = htmlUrl;
     }
 
     /**
-     * 
-     * @return
-     *     The type
+     * @return The type
      */
     public String getType() {
         return type;
     }
 
     /**
-     * 
-     * @param type
-     *     The type
+     * @param type The type
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     * 
-     * @return
-     *     The siteAdmin
+     * @return The siteAdmin
      */
     public Boolean getSiteAdmin() {
         return siteAdmin;
     }
 
     /**
-     * 
-     * @param siteAdmin
-     *     The site_admin
+     * @param siteAdmin The site_admin
      */
 
-    public Owner(){
+    public Owner() {
 
     }
 
     private Owner(Parcel in) {
 
-        login=in.readString();
-        id=in.readInt();
-        avatarUrl=in.readString();
-        gravatarId=in.readString();
-        url=in.readString();
-        htmlUrl=in.readString();
-        type=in.readString();
-        siteAdmin=(Boolean.parseBoolean(in.readString()));
+        login = in.readString();
+        id = in.readInt();
+        avatarUrl = in.readString();
+        gravatarId = in.readString();
+        url = in.readString();
+        htmlUrl = in.readString();
+        type = in.readString();
+        siteAdmin = (Boolean.parseBoolean(in.readString()));
     }
 
     public void setSiteAdmin(Boolean siteAdmin) {
@@ -213,6 +182,7 @@ public class Owner implements Parcelable {
         dest.writeString(type);
         dest.writeString(String.valueOf(siteAdmin));
     }
+
     public static final Parcelable.Creator<Owner> CREATOR
             = new Parcelable.Creator<Owner>() {
 
