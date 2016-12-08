@@ -69,10 +69,12 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
                 viewedList.add((GithubRepo)r);
             showList(viewedList,username);
         }
-        else {
+        else
             //запрос репозиториев у Presentera
             reposPresenter.onQuery(getApplicationContext());
-        }
+        else
+            //запрос репозиториев у Presentera
+            reposPresenter.onQuery(getApplicationContext());
     }
 
 
