@@ -62,10 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     historyShP = getPreferences(MODE_PRIVATE);
                     SharedPreferences.Editor historyShPed = historyShP.edit();
                     String username;
-                    if (savedIS == null)
-                        username = editTextName.getText().toString();
-                    else
-                        username = savedIS.getString("userName");
+                    username = editTextName.getText().toString();
                     String resType = realResTypes[(int) resTypeSpinner.getSelectedItemId()];
                     if (historyShP.contains("firstName")) {
                         historyShPed.putString("secondName", historyShP.getString("firstName", "null"));
