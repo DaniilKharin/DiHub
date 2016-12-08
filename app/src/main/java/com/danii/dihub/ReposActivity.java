@@ -108,8 +108,6 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
             viewedList = ((ReposAdapter) recyclerView.getAdapter()).getItems();
             savedInstanceState.putParcelableArray("res", viewedList.toArray(a));
         }
-        else
-
         super.onSaveInstanceState(savedInstanceState);
     }
 

@@ -3,11 +3,11 @@ package com.danii.dihub;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.os.ParcelableCompat;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class GithubRepo implements Parcelable {
@@ -109,7 +109,7 @@ public class GithubRepo implements Parcelable {
         fork=(Boolean.parseBoolean(in.readString()));
         url=in.readString();
         pushedAt=in.readString();
-        homepage=in.readString();
+        //homepage=in.readString();
         size=in.readInt();
         stargazersCount=in.readInt();
         watchersCount=in.readInt();
@@ -119,7 +119,7 @@ public class GithubRepo implements Parcelable {
         hasWiki=(Boolean.parseBoolean(in.readString()));
         hasPages=(Boolean.parseBoolean(in.readString()));
         forksCount=in.readInt();
-        mirrorUrl=in.readString();
+       // mirrorUrl=in.readString();
         openIssuesCount=in.readInt();
         forks=in.readInt();
         openIssues=in.readInt();
@@ -544,7 +544,7 @@ public class GithubRepo implements Parcelable {
         dest.writeString(String.valueOf(fork));
         dest.writeString(url);
         dest.writeString(pushedAt);
-        dest.writeString(homepage.toString());
+        //dest.writeString(homepage.toString());
         dest.writeInt(size);
         dest.writeInt(stargazersCount);
         dest.writeInt(watchersCount);
@@ -554,7 +554,7 @@ public class GithubRepo implements Parcelable {
         dest.writeString(String.valueOf(hasWiki));
         dest.writeString(String.valueOf(hasPages));
         dest.writeInt(forksCount);
-        dest.writeString(mirrorUrl.toString());
+       // dest.writeString(mirrorUrl.toString());
         dest.writeInt(openIssuesCount);
         dest.writeInt(forks);
         dest.writeInt(openIssues);
