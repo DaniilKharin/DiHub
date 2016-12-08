@@ -52,23 +52,24 @@ public class ReposPresenter implements IReposPresenter {
         public void run() {
             //спрашивает у Model Список репозиториев
             List<GithubRepo> list = reposModel.getReposList(dbHelper);
-            while (true) {
-                //если активити готова принять данные и выйти из цикла
-                if (ready) {
-                    RunShow r = new RunShow(list);
-                    h.post(r);
-                    break;
+
+            if (ready) {
+                RunShow r = new RunShow(list);
+                h.post(r);
+            } else
+                try {
+                    throw new InterruptedException();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                //иначе спим 2 секунды и пробуем еще раз
-                else
-                    try {
-                        throw new InterruptedException();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-            }
+
+
+
+            //
         }
+
     }
+
 
     @Override
     public void onQuery(Context cont) {
