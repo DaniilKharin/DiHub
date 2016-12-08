@@ -306,9 +306,9 @@ public class GithubRepo implements Parcelable {
      */
     public Object getHomepage() {
         if (homepage!=null)
-            return homepage;
+            return new Object();
         else
-            return "";
+            return homepage;
     }
 
     /**
@@ -452,9 +452,9 @@ public class GithubRepo implements Parcelable {
      */
     public Object getMirrorUrl() {
         if (mirrorUrl==null)
-            return mirrorUrl;
+            return new Object();
         else
-            return "";
+            return mirrorUrl;
     }
 
     /**
@@ -546,11 +546,11 @@ public class GithubRepo implements Parcelable {
         dest.writeString(fullName);
         dest.writeString(String.valueOf(_private));
         dest.writeString(htmlUrl);
-        dest.writeString(description);
+        dest.writeString(getDescription());
         dest.writeString(String.valueOf(fork));
         dest.writeString(url);
         dest.writeString(pushedAt);
-        dest.writeString(homepage.toString());
+        //dest.writeString(getHomepage().toString());
         dest.writeInt(size);
         dest.writeInt(stargazersCount);
         dest.writeInt(watchersCount);
@@ -560,7 +560,7 @@ public class GithubRepo implements Parcelable {
         dest.writeString(String.valueOf(hasWiki));
         dest.writeString(String.valueOf(hasPages));
         dest.writeInt(forksCount);
-        dest.writeString(mirrorUrl.toString());
+        dest.writeString(getMirrorUrl().toString());
         dest.writeInt(openIssuesCount);
         dest.writeInt(forks);
         dest.writeInt(openIssues);
