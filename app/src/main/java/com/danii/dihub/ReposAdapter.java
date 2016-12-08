@@ -33,15 +33,22 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         GithubRepo repo = repos.get(position);
-        holder.language.setText(repo.getLanguage());
-
+        if (repo.getLanguage().length() > 0) {
+            holder.language.setVisibility(View.VISIBLE);
+            holder.language.setText(repo.getLanguage());
+        } else
+            holder.language.setVisibility(View.GONE);
         holder.updatedAt.setText((context.getResources().getString(R.string.updated).concat(repo.getUpdatedAt())));
         holder.createdAt.setText((context.getResources().getString(R.string.created).concat(repo.getCreatedAt())));
-        if (repo.getOwner().getLogin().equals(username))
+        if (repo.getOwner().getLogin().toLowerCase().equals(username.toLowerCase()))
             holder.name.setText(repo.getName());
         else
             holder.name.setText(repo.getFullName());
-        holder.description.setText(repo.getDescription());
+        if (repo.getDescription().length() > 0) {
+            holder.description.setVisibility(View.VISIBLE);
+            holder.description.setText(repo.getDescription());
+        } else
+            holder.description.setVisibility(View.GONE);
         holder.stargazers.setText(context.getResources().getString(R.string.Star).concat(repo.getStargazersCount().toString()));
     }
 
