@@ -21,6 +21,13 @@ public interface IReposPresenter {
     // вызывает из Model getRepoURL
     // и копирует URL в буфер обмена
     void isReady(boolean ready);
-     void onDestroy();
+
+    void setUserName(String UserName);
+
+    String getUserName();
+
+    void setRepoType(String RepoType);
+
+    void setSort(String sort);
 
 }

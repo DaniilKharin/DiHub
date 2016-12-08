@@ -33,7 +33,7 @@ public class ReposPresenter implements IReposPresenter {
 
             if (list!=null)
                 //отправляем данные в view
-                reposView.showList(list, reposView.getUserName()) ;
+                reposView.showList(list) ;
             else
                 reposView.showError(R.string.error);
         }}
@@ -45,7 +45,7 @@ public class ReposPresenter implements IReposPresenter {
             @Override
             public void run() {
                 //спрашивает у Model Список репозиториев
-                List<GithubRepo> list =reposModel.getReposList(reposView.getUserName(),reposView.getRepoType(),reposView.getSort(),dbHelper);
+                List<GithubRepo> list =reposModel.getReposList(dbHelper);
                 while (true){
                     //если активити готова принять данные и выйти из цикла
                     if (ready){
@@ -90,8 +90,23 @@ public class ReposPresenter implements IReposPresenter {
     }
 
     @Override
-    public void onDestroy() {
+    public void setUserName(String UserName) {
+        reposModel.setUserName(UserName);
+    }
 
+    @Override
+    public String getUserName() {
+        return reposModel.getUserName();
+    }
+
+    @Override
+    public void setRepoType(String RepoType) {
+        reposModel.setRepoType(RepoType);
+    }
+
+    @Override
+    public void setSort(String sort) {
+        reposModel.setSort(sort);
     }
 
 

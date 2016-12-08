@@ -22,7 +22,7 @@ import java.util.List;
 
 
 public class ReposActivity extends AppCompatActivity implements IReposView {
-    String username,reptypes,sort;
+
     List<GithubRepo> viewedList;
     RecyclerView recyclerView;
     ReposAdapter reposAdapter;
@@ -37,11 +37,12 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
         recyclerView = (RecyclerView) findViewById(R.id.repos_recycle_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        username=getIntent().getStringExtra("username");
-        reptypes=getIntent().getStringExtra("reptypes");
-        sort="full_name";
+
         if (reposPresenter==null)
             reposPresenter = new ReposPresenter(this);
+        reposPresenter.setUserName(getIntent().getStringExtra("username"));
+        reposPresenter.setRepoType(getIntent().getStringExtra("reptypes"));
+        reposPresenter.setSort("full_name");
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
@@ -67,7 +68,7 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
             viewedList = new ArrayList<>();
             for (Parcelable r:a)
                 viewedList.add((GithubRepo)r);
-            showList(viewedList,username);
+            showList(viewedList);
         }
         else
             //запрос репозиториев у Presentera
@@ -91,11 +92,11 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
             case R.id.action_back: finish();
                 break;
             case R.id.sort_fullname:
-                sort="full_name";
+                reposPresenter.setSort("full_name");
                 reposPresenter.onQuery(this);
                 break;
             case R.id.sort_create_at:
-                sort="created_at";
+                reposPresenter.setSort("created_at");
                 reposPresenter.onQuery(this);
                 break;
         }
@@ -123,24 +124,11 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
     }
 
 
-    @Override
-    public String getUserName() {
-        return username;
-    }
+
 
     @Override
-    public String getRepoType() {
-        return reptypes;
-    }
-
-    @Override
-    public String getSort() {
-        return sort;
-    }
-
-    @Override
-    public void showList(List<GithubRepo> repoList, final String username) {
-        reposAdapter = new ReposAdapter(repoList,username,getApplicationContext());
+    public void showList(List<GithubRepo> repoList) {
+        reposAdapter = new ReposAdapter(repoList,reposPresenter.getUserName(),getApplicationContext());
         recyclerView.setAdapter(reposAdapter);
     }
 

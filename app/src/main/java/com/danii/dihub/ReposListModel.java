@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ReposListModel implements IReposModel{
 
-
+    private String userName, repoType, sort;
     private DBHelper dbHelper;
     private List<GithubRepo> result;
 
@@ -26,15 +26,15 @@ public class ReposListModel implements IReposModel{
 
 
     @Override
-    public List<GithubRepo> getReposList(String username, String reptypes, String sort,DBHelper dbHelper) {
+    public List<GithubRepo> getReposList(DBHelper dbHelper) {
         this.dbHelper=dbHelper;
         //удаляем старые записи из бд
         dbHelper.clearOld();
         //запрс в бд
-        result = dbHelper.getAllRepo(username, reptypes);
+        result = dbHelper.getAllRepo(userName, repoType,sort);
         //если в бд нужных данных нет спросим в интернете
         if (result == null)
-            getCall(username, reptypes, sort);
+            getCall(userName, repoType, sort);
         //и венем данные в любом случае
         return result;
     }
@@ -55,9 +55,9 @@ public class ReposListModel implements IReposModel{
             if (response.body()!=null){
                 result = new ArrayList<>();
                 result.addAll(response.body());
-                for (GithubRepo r :result) {
-                    dbHelper.addRepo(r,username,reptypes);
-                }
+
+                    dbHelper.addRepos(result,username,reptypes,sort);
+
             }
             else{
 
@@ -72,4 +72,36 @@ public class ReposListModel implements IReposModel{
             //возвращаем URL репозитория
         return result.get(id).getHtmlUrl();
     }
+
+    @Override
+    public void setUserName(String userName) {
+        this.userName=userName;
+    }
+
+    @Override
+    public void setRepoType(String repoType) {
+        this.repoType=repoType;
+    }
+
+    @Override
+    public void setSort(String sort) {
+        this.sort=sort;
+    }
+
+    @Override
+    public String getUserName() {
+        return userName;
+    }
+
+    @Override
+    public String getRepoType() {
+        return repoType;
+    }
+
+    @Override
+    public String getSort() {
+        return sort;
+    }
+
+
 }
