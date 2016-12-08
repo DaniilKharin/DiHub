@@ -21,7 +21,9 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextName;
 
     SharedPreferences historyShP;
+
     Context cont;
+    ListView listViewHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,22 @@ public class MainActivity extends AppCompatActivity {
         cont = this;
         final Spinner resTypeSpinner = (Spinner) findViewById(R.id.resTypeSpinner);
         ArrayAdapter<String> spinerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, resTypes);
+
+        listViewHistory = (ListView) findViewById(R.id.listViewHistory);
+        final ArrayList<String> listHistory = new ArrayList<String>();
+        ArrayAdapter<String> historyListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listHistory);
+        listViewHistory.setAdapter(historyListAdapter);
+        listViewHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(cont, ReposActivity.class);
+                intent.putExtra("username", listHistory.get(position).substring(0, listHistory.get(position).lastIndexOf('|')));
+                intent.putExtra("reptypes", listHistory.get(position).substring(listHistory.get(position).lastIndexOf('|') + 1));
+                editTextName.setText("");
+                startActivity(intent);
+            }
+        });
+
         spinerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         resTypeSpinner.setAdapter(spinerAdapter);
         editTextName = (EditText) findViewById(R.id.editTextName);
@@ -75,29 +93,24 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
 
         super.onStart();
-        final ArrayList<String> listHistory = new ArrayList<String>();
-        historyShP = getPreferences(MODE_PRIVATE);
-        if (historyShP.contains("firstName")) {
-            listHistory.add(historyShP.getString("firstName", "null").concat("|").concat(historyShP.getString("firstType", "null")));
+        if (listViewHistory.getAdapter() != null) {
+            @SuppressWarnings("unchecked")
+            ArrayAdapter<String> strArrAdapter = (ArrayAdapter<String>) listViewHistory.getAdapter();
+            historyShP = getPreferences(MODE_PRIVATE);
+            if (historyShP.contains("firstName")) {
+                if (strArrAdapter.getCount() > 0)
+                    strArrAdapter.remove(strArrAdapter.getItem(0));
+                strArrAdapter.insert(historyShP.getString("firstName", "null").concat("|").concat(historyShP.getString("firstType", "null")), 0);
+            }
+            if (historyShP.contains("secondName")) {
+                if (strArrAdapter.getCount() > 1)
+                    strArrAdapter.remove(strArrAdapter.getItem(1));
+                strArrAdapter.insert(historyShP.getString("secondName", "null").concat("|").concat(historyShP.getString("secondType", "null")), 1);
+            }
+            strArrAdapter.notifyDataSetChanged();
         }
-        if (historyShP.contains("secondName")) {
-            listHistory.add(historyShP.getString("secondName", "null").concat("|").concat(historyShP.getString("secondType", "null")));
-        }
-        if (listHistory.size() > 1) {
-            ListView listViewHistory = (ListView) findViewById(R.id.listViewHistory);
-            ArrayAdapter<String> historyListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listHistory);
-            listViewHistory.setAdapter(historyListAdapter);
-            listViewHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(cont, ReposActivity.class);
-                    intent.putExtra("username", listHistory.get(position).substring(0, listHistory.get(position).lastIndexOf('|')));
-                    intent.putExtra("reptypes", listHistory.get(position).substring(listHistory.get(position).lastIndexOf('|') + 1));
-                    editTextName.setText("");
-                    startActivity(intent);
-                }
-            });
-        }
+
+
     }
 
     @Override
