@@ -21,5 +21,6 @@ public interface IReposPresenter {
     // вызывает из Model getRepoURL
     // и копирует URL в буфер обмена
     void isReady(boolean ready);
+     void onDestroy();
 
 }

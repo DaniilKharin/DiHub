@@ -15,6 +15,6 @@ public interface IReposView {
     // и вызывает setAdapter у нашего RecyclerView
     void showList(List<GithubRepo> repoList,final String username);
     //выводит toast с ошибкой
-    void showError(String errMsg);
+    void showError(int msgErrId);
 
 }

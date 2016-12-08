@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 
@@ -17,10 +16,11 @@ public class ReposPresenter implements IReposPresenter {
     private IReposModel reposModel;
     private IReposView  reposView;
     private Handler h;
+    private Thread t;
     private boolean ready = false;
     ReposPresenter(IReposView reposView){
         this.reposView=reposView;
-        this.reposModel=new ReposModel();
+        this.reposModel=new ReposListModel();
     }
 
     class RunShow implements Runnable {
@@ -30,8 +30,12 @@ public class ReposPresenter implements IReposPresenter {
         }
         @Override
         public void run() {
+
             if (list!=null)
+                //отправляем данные в view
                 reposView.showList(list, reposView.getUserName()) ;
+            else
+                reposView.showError(R.string.error);
         }}
         class RunLoad implements Runnable {
             DBHelper dbHelper;
@@ -52,7 +56,7 @@ public class ReposPresenter implements IReposPresenter {
                     //иначе спим 2 секунды и пробуем еще раз
                     else
                     try {
-                        TimeUnit.SECONDS.sleep(2);
+                        throw new InterruptedException();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -64,8 +68,9 @@ public class ReposPresenter implements IReposPresenter {
         //в новом потоке
         h =new Handler();
         DBHelper dbHelper= new DBHelper(cont);
-        Thread t  = new Thread(new RunLoad(dbHelper));
+        t = new Thread(new RunLoad(dbHelper));
         t.start();
+
 
 
 
@@ -82,6 +87,11 @@ public class ReposPresenter implements IReposPresenter {
     @Override
     public void isReady(boolean ready) {
          this.ready=ready;
+    }
+
+    @Override
+    public void onDestroy() {
+
     }
 
 

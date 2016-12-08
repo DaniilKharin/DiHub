@@ -20,7 +20,7 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
  ReposAdapter(List<GithubRepo> repos, String username, Context context) {
   this.repos = repos;
   this.username=username;
-     this.context=context;
+  this.context=context;
  }
 
 
@@ -51,11 +51,6 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
  if (repos == null)
  return 0;
  return repos.size();
- }
- public boolean isEmpty(){
-  if (repos==null)
-   return true;
-  return false;
  }
  public final List<GithubRepo> getItems(){
   return  repos ;

@@ -14,13 +14,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by User on 07.12.2016.
  */
 
-public class ReposModel implements IReposModel{
+public class ReposListModel implements IReposModel{
 
 
     private DBHelper dbHelper;
     private List<GithubRepo> result;
 
-    public ReposModel() {
+    public ReposListModel() {
         result = new ArrayList<>();
     }
 
@@ -35,7 +35,7 @@ public class ReposModel implements IReposModel{
         //если в бд нужных данных нет спросим в интернете
         if (result == null)
             getCall(username, reptypes, sort);
-            //и венем данные в любом случае
+        //и венем данные в любом случае
         return result;
     }
 
@@ -56,7 +56,7 @@ public class ReposModel implements IReposModel{
                 result = new ArrayList<>();
                 result.addAll(response.body());
                 for (GithubRepo r :result) {
-                   dbHelper.addRepo(r,username,reptypes);
+                    dbHelper.addRepo(r,username,reptypes);
                 }
             }
             else{
@@ -67,7 +67,7 @@ public class ReposModel implements IReposModel{
             e.printStackTrace();
         }}
 
-        @Override
+    @Override
     public String getRepoURL(int id) {
             //возвращаем URL репозитория
         return result.get(id).getHtmlUrl();

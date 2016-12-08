@@ -23,19 +23,17 @@ import java.util.List;
 
 public class ReposActivity extends AppCompatActivity implements IReposView {
     String username,reptypes,sort;
-    List<GithubRepo> result;
+    List<GithubRepo> viewedList;
     RecyclerView recyclerView;
     ReposAdapter reposAdapter;
-    Context context;
 
-    DBHelper dbHelper;
     ReposPresenter reposPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repos);
-        context=this;
+
         recyclerView = (RecyclerView) findViewById(R.id.repos_recycle_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -54,7 +52,7 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
-                        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText("", reposPresenter.onItemClicked(position));
                         clipboard.setPrimaryClip(clip);
                     }
@@ -62,16 +60,18 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
         );
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (savedInstanceState==null) {
-            //запрос репозиториев у Presentera
-            reposPresenter.onQuery(getApplicationContext());
+        if (savedInstanceState!=null)
+        if (savedInstanceState.getParcelableArray("res")!=null){
+            //восстановление при перевороте Model не затрагивает
+            Parcelable[] a = savedInstanceState.getParcelableArray("res");
+            viewedList = new ArrayList<>();
+            for (Parcelable r:a)
+                viewedList.add((GithubRepo)r);
+            showList(viewedList,username);
         }
         else {
-            Parcelable[] a = savedInstanceState.getParcelableArray("res");
-            result = new ArrayList<GithubRepo>();
-            for (Parcelable r:a)
-                result.add((GithubRepo)r);
-            showList(result,username);
+            //запрос репозиториев у Presentera
+            reposPresenter.onQuery(getApplicationContext());
         }
     }
 
@@ -101,12 +101,13 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
     }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-
         Parcelable[] a = new Parcelable[1];
         if (recyclerView.getAdapter()!=null){
-            result = ((ReposAdapter) recyclerView.getAdapter()).getItems();
-            savedInstanceState.putParcelableArray("res", result.toArray(a));
+            viewedList = ((ReposAdapter) recyclerView.getAdapter()).getItems();
+            savedInstanceState.putParcelableArray("res", viewedList.toArray(a));
         }
+        else
+
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -144,8 +145,8 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
     }
 
     @Override
-    public void showError(String errMsg) {
-        Toast.makeText(ReposActivity.this, errMsg, Toast.LENGTH_SHORT).show();
+    public void showError(int msgErrId) {
+        Toast.makeText(ReposActivity.this, getApplicationContext().getResources().getString(msgErrId), Toast.LENGTH_SHORT).show();
         finish();
     }
 }

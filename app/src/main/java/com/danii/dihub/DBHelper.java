@@ -57,6 +57,7 @@ class DBHelper extends SQLiteOpenHelper {
 
 
     public void addRepo(GithubRepo r,String username,final String reptypes) {
+        long d;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("username",username);
@@ -71,7 +72,8 @@ class DBHelper extends SQLiteOpenHelper {
         cv.put("stargazersCount",r.getStargazersCount().toString());
         cv.put("language",r.getLanguage().toString());
         Calendar calendar = Calendar.getInstance();
-        cv.put("date",String.valueOf(calendar.getTimeInMillis()));
+        d=calendar.getTimeInMillis();
+        cv.put("date",String.valueOf(d));
         int id= (int) db.insert("repos", null, cv);
         db.close(); // Closing database connection
     }
@@ -92,7 +94,7 @@ class DBHelper extends SQLiteOpenHelper {
         int updatedAtColIndex = c.getColumnIndex("updatedAt");
         int stargazersCountColIndex = c.getColumnIndex("stargazersCount");
         int languageColIndex = c.getColumnIndex("language");
-        
+        long i;
       if (c.moveToFirst()) {
             do {
                 GithubRepo r = new GithubRepo();
@@ -108,6 +110,7 @@ class DBHelper extends SQLiteOpenHelper {
                 r.setStargazersCount(c.getInt(stargazersCountColIndex));
                 r.setLanguage(c.getString(languageColIndex));
                 result.add(r);
+                i = c.getInt(c.getColumnIndex("date"));
             } while (c.moveToNext());
           return result;
         }
