@@ -1,5 +1,7 @@
 package com.danii.dihub;
 
+import android.content.Context;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +23,14 @@ public class NWReposDataStore implements ReposDataStore {
     private String userName;
     private String repoType;
     private String sort;
+    Context context;
 
 
-    public NWReposDataStore(String userName, String repoType, String sort) {
+    public NWReposDataStore(String userName, String repoType, String sort, Context context) {
         this.userName = userName;
         this.repoType = repoType;
         this.sort = sort;
+        this.context = context;
     }
 
 
@@ -61,7 +65,10 @@ public class NWReposDataStore implements ReposDataStore {
                     @Override
                     public void call(Subscriber<? super List<GithubRepo>> sub) {
                         //вынести вызов в отдельный поток
-                        sub.onNext(getCall(userName, repoType, sort));
+                        List<GithubRepo> githubRepoList = getCall(userName, repoType, sort);
+                        sub.onNext(githubRepoList);
+                        DBReposDataStore dbReposDataStore = new DBReposDataStore(userName, repoType, sort, context);
+                        dbReposDataStore.addRepos(githubRepoList);
                         sub.onCompleted();
                     }
                 }

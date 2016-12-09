@@ -55,8 +55,7 @@ public class ReposPresenter implements IReposPresenter {
             protected void onPostExecute(Void v) {
                 List<GithubRepo> githubRepoList = reposModel.getReposList();
                 reposView.showList(githubRepoList);
-                DBReposDataStore dbReposDataStore = new DBReposDataStore(reposModel.getUserName(), reposModel.getRepoType(), reposModel.getSort(), cont);
-                dbReposDataStore.addRepos(githubRepoList);
+
             }
         };
         asyncTask.execute();

@@ -24,7 +24,7 @@ public class ReposDataStoreFactory {
         if (userDataStore.isExists()) {
             return userDataStore;
         } else {
-            return new NWReposDataStore(userName, repoType, sort);
+            return new NWReposDataStore(userName, repoType, sort, context);
         }
 
 
