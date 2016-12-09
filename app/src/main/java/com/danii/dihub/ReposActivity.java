@@ -138,6 +138,11 @@ public class ReposActivity extends AppCompatActivity implements IReposView {
         Toast.makeText(ReposActivity.this, getApplicationContext().getResources().getString(msgErrId), Toast.LENGTH_SHORT).show();
         finish();
     }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
+    }
 }
 
 

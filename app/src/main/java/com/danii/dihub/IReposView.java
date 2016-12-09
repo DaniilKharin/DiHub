@@ -1,5 +1,7 @@
 package com.danii.dihub;
 
+import android.content.Context;
+
 import java.util.List;
 
 /**
@@ -15,4 +17,5 @@ public interface IReposView {
     //выводит toast с ошибкой
     void showError(int msgErrId);
 
+    Context getContext();
 }

@@ -1,76 +1,38 @@
 package com.danii.dihub;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Subscriber;
 
 /**
  * Created by User on 07.12.2016.
  */
 
-public class ReposListModel implements IReposModel {
+public class ReposListModel extends Subscriber<List<GithubRepo>> implements IReposModel {
 
     private String userName, repoType, sort;
-    private DBHelper dbHelper;
-    private List<GithubRepo> result;
+
+    private List<GithubRepo> githubRepoList;
 
     public ReposListModel() {
-        result = new ArrayList<>();
+        githubRepoList = new ArrayList<>();
     }
 
 
     @Override
-    public List<GithubRepo> getReposList(DBHelper dbHelper) {
-        this.dbHelper = dbHelper;
-        //удаляем старые записи из бд
-        dbHelper.clearOld();
-        //запрс в бд
-        result = dbHelper.getAllRepo(userName, repoType, sort);
-        //если в бд нужных данных нет спросим в интернете
-        if (result == null)
-            getCall(userName, repoType, sort);
-        //и венем данные в любом случае
-        return result;
+    public List<GithubRepo> getReposList() {
+        return githubRepoList;
     }
 
 
-    private void getCall(final String username, final String reptypes, String sort) {
-        String BASE_URL = "https://api.github.com";
-        Retrofit client = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        GithubAPI service = client.create(GithubAPI.class);
 
-        Call<List<GithubRepo>> call = service.getUser(username, reptypes, sort);
-        //делаем синхронный запрос
-        try {
-            Response<List<GithubRepo>> response = call.execute();
-            if (response.body() != null) {
-                result = new ArrayList<>();
-                result.addAll(response.body());
-
-                dbHelper.addRepos(result, username, reptypes, sort);
-
-            } else {
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public String getRepoURL(int id) {
         //возвращаем URL репозитория
-        return result.get(id).getHtmlUrl();
+        return githubRepoList.get(id).getHtmlUrl();
     }
 
     @Override
@@ -104,4 +66,19 @@ public class ReposListModel implements IReposModel {
     }
 
 
+    @Override
+    public void onCompleted() {
+
+    }
+
+    @Override
+    public void onError(Throwable e) {
+
+    }
+
+    @Override
+    public void onNext(List<GithubRepo> githubRepos) {
+        this.githubRepoList = githubRepos;
+
+    }
 }

@@ -1,9 +1,12 @@
 package com.danii.dihub;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Handler;
 
 import java.util.List;
+
+import rx.Subscriber;
 
 
 /**
@@ -21,64 +24,42 @@ public class ReposPresenter implements IReposPresenter {
     ReposPresenter(IReposView reposView) {
         this.reposView = reposView;
         this.reposModel = new ReposListModel();
-    }
-
-    class RunShow implements Runnable {
-        List<GithubRepo> list;
-
-        RunShow(List<GithubRepo> list) {
-            this.list = list;
-        }
-
-        @Override
-        public void run() {
-
-            if (list != null)
-                //отправляем данные в view
-                reposView.showList(list);
-            else
-                reposView.showError(R.string.error);
-        }
-    }
-
-    class RunLoad implements Runnable {
-        DBHelper dbHelper;
-
-        RunLoad(DBHelper dbHelper) {
-            this.dbHelper = dbHelper;
-        }
-
-        @Override
-        public void run() {
-            //спрашивает у Model Список репозиториев
-            List<GithubRepo> list = reposModel.getReposList(dbHelper);
-
-            if (ready) {
-                RunShow r = new RunShow(list);
-                h.post(r);
-            } else
-                try {
-                    throw new InterruptedException();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-
-
-            //
-        }
 
     }
+
+
 
 
     @Override
-    public void onQuery(Context cont) {
+    public void onQuery(final Context cont) {
         //в новом потоке
-        h = new Handler();
-        DBHelper dbHelper = new DBHelper(cont);
-        t = new Thread(new RunLoad(dbHelper));
-        t.start();
 
+        AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                ReposDataStoreFactory reposDataStoreFactory = new ReposDataStoreFactory(reposView.getContext());
+                ReposDataStore reposDataStore = reposDataStoreFactory.create(reposModel.getUserName(), reposModel.getRepoType(), reposModel.getSort());
+                if (ready) {
+                    reposDataStore.reposList().subscribe((Subscriber<? super List<GithubRepo>>) reposModel);
+                } else
+                    try {
+                        throw new InterruptedException();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+                List<GithubRepo> githubRepoList = reposModel.getReposList();
+                reposView.showList(githubRepoList);
+                DBReposDataStore dbReposDataStore = new DBReposDataStore(reposModel.getUserName(), reposModel.getRepoType(), reposModel.getSort(), cont);
+                dbReposDataStore.addRepos(githubRepoList);
+            }
+        };
+        asyncTask.execute();
 
     }
 

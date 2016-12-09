@@ -10,10 +10,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-class DBHelper extends SQLiteOpenHelper {
-    public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+import rx.Observable;
+import rx.Subscriber;
 
+class DBReposDataStore extends SQLiteOpenHelper implements ReposDataStore {
+    public DBReposDataStore(String userName, String repoType, String sort, Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.userName = userName;
+        this.repoType = repoType;
+        this.sort = sort;
     }
 
     // Database Version
@@ -22,6 +27,10 @@ class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "dbrepos";
     // Contacts table name
     private static final String TABLE = "repos";
+
+    private String userName;
+    private String repoType;
+    private String sort;
 
 
     @Override
@@ -55,15 +64,15 @@ class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public void addRepos(List<GithubRepo> result, String username, final String reptypes, String sort) {
+    public void addRepos(List<GithubRepo> githubRepoList) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         Calendar calendar = Calendar.getInstance();
         long d = calendar.getTimeInMillis();
-        for (GithubRepo r : result) {
-            cv.put("username", username);
+        for (GithubRepo r : githubRepoList) {
+            cv.put("username", userName);
             cv.put("name", r.getName().toString());
-            cv.put("type", reptypes.toString());
+            cv.put("type", repoType.toString());
             cv.put("fullname", r.getFullName().toString());
             cv.put("owner", r.getOwner().getLogin());
             cv.put("htmlUrl", r.getHtmlUrl().toString());
@@ -124,4 +133,28 @@ class DBHelper extends SQLiteOpenHelper {
         int i = db.delete("repos", "date > ?", new String[]{s});
     }
 
+    @Override
+    public Observable<List<GithubRepo>> reposList() {
+        clearOld();
+        //запрс в бд
+        return Observable.create(
+                new Observable.OnSubscribe<List<GithubRepo>>() {
+                    @Override
+                    public void call(Subscriber<? super List<GithubRepo>> sub) {
+                        sub.onNext(getAllRepo(userName, repoType, sort));
+                        sub.onCompleted();
+                    }
+                }
+        );
+
+    }
+
+    boolean isExists() {
+        String selectQuery = "SELECT * FROM repos WHERE username = ? AND type = ? AND sort = ?";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, new String[]{userName, repoType, sort});
+        boolean exists = c.moveToFirst();
+        c.close();
+        return exists;
+    }
 }
