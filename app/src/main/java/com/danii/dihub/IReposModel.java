@@ -1,7 +1,6 @@
 package com.danii.dihub;
 
 
-
 import java.util.List;
 
 /**
@@ -12,8 +11,21 @@ public interface IReposModel {
     //Загрузка Списка репозиториев из кеша(SQLite DB)
     //или из интернета
     //если ни кеша с такими параметрами ни репозитория в интернете нет то возвращает NULL
-    List<GithubRepo> getReposList(String username,String repotype,String sort,DBHelper dbHelper);
+    List<GithubRepo> getReposList(DBHelper dbHelper);
 
     //возвращает url репозитория с id
     String getRepoURL(int id);
+
+
+    void setUserName(String UserName);
+
+    void setRepoType(String RepoType);
+
+    void setSort(String sort);
+
+    String getUserName();
+
+    String getRepoType();
+
+    String getSort();
 }

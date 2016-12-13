@@ -7,6 +7,7 @@
     <string name="Star">★ </string>
     <string name="sort_fullname">По полному имени</string>
     <string name="sort_create_at">По дате создания</string>
+    <string name="error">"Такого пользователя не существует или сетевое соединение отсутствует"</string>
 
     <string-array name="resTypes">
         <item>все</item>

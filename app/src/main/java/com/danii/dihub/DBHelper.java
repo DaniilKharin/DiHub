@@ -16,72 +16,76 @@ class DBHelper extends SQLiteOpenHelper {
 
     }
 
-        // Database Version
-        private static final int DATABASE_VERSION = 1;
-        // Database Name
-        private static final String DATABASE_NAME = "dbrepos";
-        // Contacts table name
-        private static final String TABLE = "repos";
+    // Database Version
+    private static final int DATABASE_VERSION = 1;
+    // Database Name
+    private static final String DATABASE_NAME = "dbrepos";
+    // Contacts table name
+    private static final String TABLE = "repos";
 
 
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            String CREATE_CONTACTS_TABLE = "create table repos ("
-                    + " id integer primary key autoincrement,"
-                    + " type text,"
-                    + " username text,"
-                    + " res type text,"
-                    + " name text,"
-                    + " fullname text,"
-                    + " owner text,"
-                    + " htmlUrl text,"
-                    + " description text,"
-                    + " createdAt text,"
-                    + " updatedAt text,"
-                    + " stargazersCount integer,"
-                    + " language text,"
-                    + " date integer "
-                    + ");";
-            db.execSQL(CREATE_CONTACTS_TABLE);
-        }
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE);
-
-            onCreate(db);
-        }
-
-
-
-
-
-    public void addRepo(GithubRepo r,String username,final String reptypes) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("username",username);
-        cv.put("name",r.getName().toString());
-        cv.put("type",reptypes.toString());
-        cv.put("fullname",r.getFullName().toString());
-        cv.put("owner",r.getOwner().getLogin());
-        cv.put("htmlUrl",r.getHtmlUrl().toString());
-        cv.put("description",r.getDescription().toString());
-        cv.put("createdAt",r.getCreatedAt().toString());
-        cv.put("updatedAt",r.getUpdatedAt().toString());
-        cv.put("stargazersCount",r.getStargazersCount().toString());
-        cv.put("language",r.getLanguage().toString());
-        Calendar calendar = Calendar.getInstance();
-        cv.put("date",String.valueOf(calendar.getTimeInMillis()));
-        int id= (int) db.insert("repos", null, cv);
-        db.close(); // Closing database connection
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        String CREATE_CONTACTS_TABLE = "create table repos ("
+                + " id integer primary key autoincrement,"
+                + " type text,"
+                + " username text,"
+                + " res type text,"
+                + " name text,"
+                + " fullname text,"
+                + " owner text,"
+                + " htmlUrl text,"
+                + " description text,"
+                + " createdAt text,"
+                + " updatedAt text,"
+                + " stargazersCount integer,"
+                + " language text,"
+                + " date NUMERIC, "
+                + " sort text"
+                + ");";
+        db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
-    public List<GithubRepo> getAllRepo(String username, final String repotype) {
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE);
+
+        onCreate(db);
+    }
+
+
+    public void addRepos(List<GithubRepo> result, String username, final String reptypes, String sort) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        Calendar calendar = Calendar.getInstance();
+        long d = calendar.getTimeInMillis();
+        for (GithubRepo r : result) {
+            cv.put("username", username);
+            cv.put("name", r.getName().toString());
+            cv.put("type", reptypes.toString());
+            cv.put("fullname", r.getFullName().toString());
+            cv.put("owner", r.getOwner().getLogin());
+            cv.put("htmlUrl", r.getHtmlUrl().toString());
+            cv.put("description", r.getDescription().toString());
+            cv.put("createdAt", r.getCreatedAt().toString());
+            cv.put("updatedAt", r.getUpdatedAt().toString());
+            cv.put("stargazersCount", r.getStargazersCount().toString());
+            cv.put("language", r.getLanguage().toString());
+            cv.put("date", String.valueOf(d));
+            cv.put("sort", sort);
+            int id = (int) db.insert("repos", null, cv);
+            cv.clear();
+        }
+        db.close();// Closing database connection
+    }
+
+    public List<GithubRepo> getAllRepo(String username, final String repotype, String sort) {
         List<GithubRepo> result = new ArrayList<GithubRepo>();
 
-        String selectQuery = "SELECT * FROM repos WHERE username = ? AND type = ?";
+        String selectQuery = "SELECT * FROM repos WHERE username = ? AND type = ? AND sort = ?";
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c = db.rawQuery(selectQuery, new String[]{username,repotype});
+        Cursor c = db.rawQuery(selectQuery, new String[]{username, repotype, sort});
         // определяем номера столбцов по имени в выборке
         int nameColIndex = c.getColumnIndex("name");
         int fullnameColIndex = c.getColumnIndex("fullname");
@@ -92,8 +96,7 @@ class DBHelper extends SQLiteOpenHelper {
         int updatedAtColIndex = c.getColumnIndex("updatedAt");
         int stargazersCountColIndex = c.getColumnIndex("stargazersCount");
         int languageColIndex = c.getColumnIndex("language");
-        
-      if (c.moveToFirst()) {
+        if (c.moveToFirst()) {
             do {
                 GithubRepo r = new GithubRepo();
                 Owner owner = new Owner();
@@ -109,15 +112,16 @@ class DBHelper extends SQLiteOpenHelper {
                 r.setLanguage(c.getString(languageColIndex));
                 result.add(r);
             } while (c.moveToNext());
-          return result;
-        }
-        else return null;
+            return result;
+        } else return null;
 
     }
+
     public void clearOld() {
         Calendar calendar = Calendar.getInstance();
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("repos","date > ?",new String[]{String.valueOf(calendar.getTimeInMillis()-300000)});
+        String s = String.valueOf(calendar.getTimeInMillis() - 300000);
+        int i = db.delete("repos", "date > ?", new String[]{s});
     }
 
 }

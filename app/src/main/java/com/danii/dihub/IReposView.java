@@ -8,13 +8,11 @@ import java.util.List;
 
 public interface IReposView {
 
-    String getUserName();
-    String getRepoType();
-    String getSort();
     //Создает экземпляр ReposAdapter передавая в него reposList
     // и вызывает setAdapter у нашего RecyclerView
-    void showList(List<GithubRepo> repoList,final String username);
+    void showList(List<GithubRepo> repoList);
+
     //выводит toast с ошибкой
-    void showError(String errMsg);
+    void showError(int msgErrId);
 
 }
