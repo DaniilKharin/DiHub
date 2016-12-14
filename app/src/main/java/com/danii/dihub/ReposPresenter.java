@@ -6,7 +6,6 @@ import android.os.Handler;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.schedulers.Schedulers;
 
 
@@ -40,7 +39,7 @@ public class ReposPresenter implements IReposPresenter {
         ReposDataStore reposDataStore = reposDataStoreFactory.create(reposModel.getUserName(), reposModel.getRepoType(), reposModel.getSort());
         Observable<List<GithubRepo>> repoList= reposDataStore.reposList();
         if (ready)
-            repoList.subscribe(new ReposSubscriber(reposModel));
+            repoList.subscribe(new ReposSubscriber(reposModel, reposView));
         repoList.subscribeOn(Schedulers.io());
 
 
