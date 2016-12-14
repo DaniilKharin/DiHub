@@ -10,7 +10,7 @@ import rx.Subscriber;
  * Created by User on 07.12.2016.
  */
 
-public class ReposListModel extends Subscriber<List<GithubRepo>> implements IReposModel {
+public class ReposListModel  implements IReposModel {
 
     private String userName, repoType, sort;
 
@@ -26,7 +26,10 @@ public class ReposListModel extends Subscriber<List<GithubRepo>> implements IRep
         return githubRepoList;
     }
 
-
+    @Override
+    public void setReposList(List<GithubRepo> reposList) {
+        this.githubRepoList=reposList;
+    }
 
 
     @Override
@@ -66,19 +69,4 @@ public class ReposListModel extends Subscriber<List<GithubRepo>> implements IRep
     }
 
 
-    @Override
-    public void onCompleted() {
-
-    }
-
-    @Override
-    public void onError(Throwable e) {
-
-    }
-
-    @Override
-    public void onNext(List<GithubRepo> githubRepos) {
-        this.githubRepoList = githubRepos;
-
-    }
 }

@@ -1,12 +1,13 @@
 package com.danii.dihub;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Handler;
 
 import java.util.List;
 
+import rx.Observable;
 import rx.Subscriber;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -34,31 +35,14 @@ public class ReposPresenter implements IReposPresenter {
     public void onQuery(final Context cont) {
         //в новом потоке
 
-        AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
 
-            @Override
-            protected Void doInBackground(Void... params) {
-                ReposDataStoreFactory reposDataStoreFactory = new ReposDataStoreFactory(reposView.getContext());
-                ReposDataStore reposDataStore = reposDataStoreFactory.create(reposModel.getUserName(), reposModel.getRepoType(), reposModel.getSort());
-                if (ready) {
-                    reposDataStore.reposList().subscribe((Subscriber<? super List<GithubRepo>>) reposModel);
-                } else
-                    try {
-                        throw new InterruptedException();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                return null;
-            }
+        ReposDataStoreFactory reposDataStoreFactory = new ReposDataStoreFactory(reposView.getContext());
+        ReposDataStore reposDataStore = reposDataStoreFactory.create(reposModel.getUserName(), reposModel.getRepoType(), reposModel.getSort());
+        Observable<List<GithubRepo>> repoList= reposDataStore.reposList();
+        if (ready)
+            repoList.subscribe(new ReposSubscriber(reposModel));
+        repoList.subscribeOn(Schedulers.io());
 
-            @Override
-            protected void onPostExecute(Void v) {
-                List<GithubRepo> githubRepoList = reposModel.getReposList();
-                reposView.showList(githubRepoList);
-
-            }
-        };
-        asyncTask.execute();
 
     }
 

@@ -12,7 +12,7 @@ public interface IReposModel {
     //или из интернета
     //если ни кеша с такими параметрами ни репозитория в интернете нет то возвращает NULL
     List<GithubRepo> getReposList();
-
+    void setReposList(List<GithubRepo> reposList);
     //возвращает url репозитория с id
     String getRepoURL(int id);
 
