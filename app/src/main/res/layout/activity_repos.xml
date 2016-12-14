@@ -5,7 +5,7 @@
     android:id="@+id/activity_repos"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.danii.dihub.ReposActivity"
+    tools:context="com.danii.dihub.repos.view.ReposActivity"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"

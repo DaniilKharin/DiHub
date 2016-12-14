@@ -1,7 +1,9 @@
-package com.danii.dihub;
+package com.danii.dihub.repos.repo;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+
+import com.danii.dihub.repos.base.ReposDataStore;
 
 import javax.inject.Singleton;
 

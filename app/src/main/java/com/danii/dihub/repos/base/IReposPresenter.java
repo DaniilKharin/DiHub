@@ -1,4 +1,4 @@
-package com.danii.dihub;
+package com.danii.dihub.repos.base;
 
 import android.content.Context;
 

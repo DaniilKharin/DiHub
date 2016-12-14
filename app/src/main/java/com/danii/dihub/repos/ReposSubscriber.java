@@ -1,4 +1,8 @@
-package com.danii.dihub;
+package com.danii.dihub.repos;
+
+import com.danii.dihub.repos.base.IReposModel;
+import com.danii.dihub.repos.base.IReposView;
+import com.danii.dihub.repos.model.GithubRepo;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
-package com.danii.dihub;
+package com.danii.dihub.repos;
 
+
+import com.danii.dihub.repos.model.GithubRepo;
 
 import java.util.List;
 

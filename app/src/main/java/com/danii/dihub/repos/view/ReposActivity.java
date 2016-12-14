@@ -1,4 +1,4 @@
-package com.danii.dihub;
+package com.danii.dihub.repos.view;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -15,6 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.danii.dihub.repos.model.GithubRepo;
+import com.danii.dihub.R;
+import com.danii.dihub.repos.base.IReposView;
+import com.danii.dihub.repos.presenter.ReposPresenter;
 
 import java.util.ArrayList;
 import java.util.List;

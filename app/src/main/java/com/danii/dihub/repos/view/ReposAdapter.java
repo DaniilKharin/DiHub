@@ -1,4 +1,4 @@
-package com.danii.dihub;
+package com.danii.dihub.repos.view;
 
 
 import android.content.Context;
@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.danii.dihub.repos.model.GithubRepo;
+import com.danii.dihub.R;
 
 import java.util.List;
 
@@ -17,7 +20,7 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
     private Context context;
 
 
-    ReposAdapter(List<GithubRepo> repos, String username, Context context) {
+    public ReposAdapter(List<GithubRepo> repos, String username, Context context) {
         this.repos = repos;
         this.username = username;
         this.context = context;

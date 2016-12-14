@@ -1,10 +1,10 @@
-package com.danii.dihub;
+package com.danii.dihub.repos.model;
 
+
+import com.danii.dihub.repos.base.IReposModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.Subscriber;
 
 /**
  * Created by User on 07.12.2016.

@@ -1,10 +1,14 @@
-package com.danii.dihub;
+package com.danii.dihub.repos.repo;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.danii.dihub.repos.model.GithubRepo;
+import com.danii.dihub.repos.model.Owner;
+import com.danii.dihub.repos.base.ReposDataStore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,7 +17,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 
-class DBReposDataStore extends SQLiteOpenHelper implements ReposDataStore {
+public class DBReposDataStore extends SQLiteOpenHelper implements ReposDataStore {
     public DBReposDataStore(String userName, String repoType, String sort, Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.userName = userName;

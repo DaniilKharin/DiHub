@@ -1,4 +1,4 @@
-package com.danii.dihub;
+package com.danii.dihub.repos.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

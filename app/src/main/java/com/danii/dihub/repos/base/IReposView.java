@@ -1,6 +1,8 @@
-package com.danii.dihub;
+package com.danii.dihub.repos.base;
 
 import android.content.Context;
+
+import com.danii.dihub.repos.model.GithubRepo;
 
 import java.util.List;
 

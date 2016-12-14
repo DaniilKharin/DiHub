@@ -1,5 +1,5 @@
 
-package com.danii.dihub;
+package com.danii.dihub.repos.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

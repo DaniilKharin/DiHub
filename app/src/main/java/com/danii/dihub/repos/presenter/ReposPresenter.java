@@ -1,7 +1,16 @@
-package com.danii.dihub;
+package com.danii.dihub.repos.presenter;
 
 import android.content.Context;
 import android.os.Handler;
+
+import com.danii.dihub.repos.model.GithubRepo;
+import com.danii.dihub.repos.repo.ReposDataStoreFactory;
+import com.danii.dihub.repos.ReposSubscriber;
+import com.danii.dihub.repos.base.IReposModel;
+import com.danii.dihub.repos.base.IReposPresenter;
+import com.danii.dihub.repos.base.IReposView;
+import com.danii.dihub.repos.base.ReposDataStore;
+import com.danii.dihub.repos.model.ReposListModel;
 
 import java.util.List;
 
@@ -21,7 +30,7 @@ public class ReposPresenter implements IReposPresenter {
     private Thread t;
     private boolean ready = false;
 
-    ReposPresenter(IReposView reposView) {
+    public ReposPresenter(IReposView reposView) {
         this.reposView = reposView;
         this.reposModel = new ReposListModel();
 
